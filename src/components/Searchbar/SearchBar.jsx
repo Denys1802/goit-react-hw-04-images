@@ -18,6 +18,11 @@ const Searchbar = ({ createSearchText, resetPage }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    const value = e.target[1].value;
+    if (value !== inputValue) {
+      resetPage();
+      createSearchText(inputValue);
+    }
     createSearchText(inputValue);
   };
 

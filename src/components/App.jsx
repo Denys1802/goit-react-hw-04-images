@@ -8,25 +8,28 @@ import ImageGallery from './ImageGallery/ImageGallery';
 
 const App = () => {
   const [searchText, setSearchText] = useState('');
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [totalHits, setTotalHits] = useState(0);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (searchText) {
-      setIsLoading(true);
-      fetchImages(searchText, page)
-        .then(data => {
-          setImages(data.hits);
-          setIsLoading(false);
-          setTotalHits(data.totalHits);
-        })
-        .catch(error => setError(true));
+    if (!searchText) {
+      return;
     }
-    return;
-  }, [searchText, page]);
+    setIsLoading(true);
+    fetchImages(searchText, page)
+      .then(data => {
+        if (data.hits.length === 0) {
+          return;
+        }
+        setImages(images => [...images, ...data.hits]);
+        setIsLoading(false);
+        setTotalHits(data.totalHits);
+      })
+      .catch(() => setError(true));
+  }, [page, searchText]);
 
   const incrementPage = () => {
     setPage(prevPage => prevPage + 1);
@@ -35,6 +38,7 @@ const App = () => {
   const resetPage = () => {
     setPage(1);
     setSearchText('');
+    setImages([]);
   };
 
   return (
@@ -43,7 +47,7 @@ const App = () => {
         <Searchbar createSearchText={setSearchText} resetPage={resetPage} />
         {error && <h1>Please try again</h1>}
         {images && <ImageGallery images={images} />}
-        {images && !isLoading && totalHits > 12 && (
+        {images.length > 0 && !isLoading && totalHits > 12 && (
           <LoadMoreBtn onClick={incrementPage} />
         )}
         {isLoading && <Loader widthLoader={'200'} heightLoader={'200'} />}
@@ -53,3 +57,37 @@ const App = () => {
 };
 
 export default App;
+//  componentDidUpdate(_, prevState) {
+//     const searchText = this.state.searchText;
+//     let page = this.state.page;
+//     if (prevState.searchText !== searchText && searchText) {
+//       this.setState({ isLoading: true, page: 1 });
+//       fetchImages(searchText, page)
+//         .then(data => {
+//           this.setState({
+//             images: data.hits,
+//             isLoading: false,
+//             isHidden: true,
+//             totalHits: data.totalHits,
+//           });
+//         })
+//         .catch(error => this.setState({ error: true }));
+//     }
+
+//     if (prevState.page < this.state.page) {
+//       this.setState({ isLoading: true });
+//       fetchImages(searchText, page)
+//         .then(({ hits }) => {
+//           this.setState(prevState => {
+//             return {
+//               images: [...prevState.images, ...hits],
+//               page,
+//             };
+//           });
+//         })
+//         .catch(error => this.setState({ error: true }))
+//         .finally(() => {
+//           this.setState({ isLoading: false });
+//         });
+//     }
+//   }
