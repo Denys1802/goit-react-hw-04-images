@@ -1,33 +1,61 @@
-import { Component } from "react";
-import { Overlay, ModalImg } from "./Modal.styled";
-class Modal extends Component {
-  hideModalKeydown = (e) => {
-    if (e.key === "Escape") {
-      this.props.onModalClick();
+import { useEffect } from 'react';
+import { Overlay, ModalImg } from './Modal.styled';
+
+const Modal = ({ children, onModalClick }) => {
+  const hideModalClick = e => {
+    if (e.target.dataset.action === 'overlay') {
+      onModalClick();
     }
   };
 
-  hideModalClick = (e) => {
-    if (e.target.dataset.action === "overlay") {
-      this.props.onModalClick();
-    }
-  };
+  useEffect(() => {
+    const hideModalKeydown = e => {
+      if (e.key === 'Escape') {
+        onModalClick();
+      }
+    };
+    window.addEventListener('keydown', hideModalKeydown);
 
-  componentDidMount() {
-    window.addEventListener("keydown", this.hideModalKeydown);
-  }
+    return () => {
+      window.removeEventListener('keydown', hideModalKeydown);
+    };
+  }, [onModalClick]);
 
-  componentWillUnmount() {
-    window.removeEventListener("keydown", this.hideModalKeydown);
-  }
-
-  render() {
-    return (
-      <Overlay onClick={this.hideModalClick} data-action="overlay">
-        <ModalImg>{this.props.children}</ModalImg>
-      </Overlay>
-    );
-  }
-}
-
+  return (
+    <Overlay onClick={hideModalClick} data-action="overlay">
+      <ModalImg>{children}</ModalImg>
+    </Overlay>
+  );
+};
 export default Modal;
+// class Modal extends Component {
+//   hideModalKeydown = (e) => {
+//     if (e.key === "Escape") {
+//       this.props.onModalClick();
+//     }
+//   };
+
+//   hideModalClick = (e) => {
+//     if (e.target.dataset.action === "overlay") {
+//       this.props.onModalClick();
+//     }
+//   };
+
+//   componentDidMount() {
+//     window.addEventListener("keydown", this.hideModalKeydown);
+//   }
+
+//   componentWillUnmount() {
+//     window.removeEventListener("keydown", this.hideModalKeydown);
+//   }
+
+//   render() {
+//     return (
+//       <Overlay onClick={this.hideModalClick} data-action="overlay">
+//         <ModalImg>{this.props.children}</ModalImg>
+//       </Overlay>
+//     );
+//   }
+// }
+
+// export default Modal;
