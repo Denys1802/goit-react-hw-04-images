@@ -21,14 +21,11 @@ const App = () => {
     setIsLoading(true);
     fetchImages(searchText, page)
       .then(data => {
-        if (data.hits.length === 0) {
-          return;
-        }
-        setImages(images => [...images, ...data.hits]);
-        setIsLoading(false);
+        setImages(prevImages => [...prevImages, ...data.hits]);
         setTotalHits(data.totalHits);
       })
-      .catch(() => setError(true));
+      .catch(() => setError(true))
+      .finally(() => setIsLoading(false));
   }, [page, searchText]);
 
   const incrementPage = () => {
@@ -37,14 +34,18 @@ const App = () => {
 
   const resetPage = () => {
     setPage(1);
-    setSearchText('');
-    setImages([]);
   };
 
+  const createSearchText = currentText => {
+    if (searchText !== currentText) {
+      setSearchText(currentText);
+      setImages([]);
+    }
+  };
   return (
     <>
       <AppWrap>
-        <Searchbar createSearchText={setSearchText} resetPage={resetPage} />
+        <Searchbar createSearchText={createSearchText} resetPage={resetPage} />
         {error && <h1>Please try again</h1>}
         {images && <ImageGallery images={images} />}
         {images.length > 0 && !isLoading && totalHits > 12 && (

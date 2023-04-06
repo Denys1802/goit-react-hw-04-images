@@ -13,17 +13,12 @@ const Searchbar = ({ createSearchText, resetPage }) => {
   const handleChange = ({ target }) => {
     const value = target.value;
     setInputValue(value);
-    resetPage();
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    const value = e.target[1].value;
-    if (value !== inputValue) {
-      resetPage();
-      createSearchText(inputValue);
-    }
     createSearchText(inputValue);
+    resetPage();
   };
 
   return (

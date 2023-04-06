@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const SeaechHeader = styled.header`
   top: 0;
@@ -35,7 +35,7 @@ export const FormBtn = styled.button`
   height: 48px;
   border: 0;
 
-  background-image: url("https://img.icons8.com/ios-filled/256/search--v1.png");
+  background-image: url('https://img.icons8.com/ios-filled/256/search--v1.png');
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
@@ -64,6 +64,7 @@ export const FormLabel = styled.span`
 export const FormInput = styled.input`
   display: inline-block;
   width: 100%;
+  height: 100%;
   font: inherit;
   font-size: 20px;
   border: none;
