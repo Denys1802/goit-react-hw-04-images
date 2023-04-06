@@ -58,37 +58,3 @@ const App = () => {
 };
 
 export default App;
-//  componentDidUpdate(_, prevState) {
-//     const searchText = this.state.searchText;
-//     let page = this.state.page;
-//     if (prevState.searchText !== searchText && searchText) {
-//       this.setState({ isLoading: true, page: 1 });
-//       fetchImages(searchText, page)
-//         .then(data => {
-//           this.setState({
-//             images: data.hits,
-//             isLoading: false,
-//             isHidden: true,
-//             totalHits: data.totalHits,
-//           });
-//         })
-//         .catch(error => this.setState({ error: true }));
-//     }
-
-//     if (prevState.page < this.state.page) {
-//       this.setState({ isLoading: true });
-//       fetchImages(searchText, page)
-//         .then(({ hits }) => {
-//           this.setState(prevState => {
-//             return {
-//               images: [...prevState.images, ...hits],
-//               page,
-//             };
-//           });
-//         })
-//         .catch(error => this.setState({ error: true }))
-//         .finally(() => {
-//           this.setState({ isLoading: false });
-//         });
-//     }
-//   }
