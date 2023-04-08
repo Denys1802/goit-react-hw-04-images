@@ -1,3 +1,4 @@
+import toast, { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { AppWrap } from './App.styled';
 import { fetchImages } from './services/fetch';
@@ -12,7 +13,7 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [totalHits, setTotalHits] = useState(0);
-  const [error, setError] = useState(false);
+  //const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!searchText) {
@@ -23,8 +24,13 @@ const App = () => {
       .then(data => {
         setImages(prevImages => [...prevImages, ...data.hits]);
         setTotalHits(data.totalHits);
+        if (data.hits.length === 0) {
+          toast('No any images!!');
+        } else {
+          toast.success('Successfully!!');
+        }
       })
-      .catch(() => setError(true))
+      .catch(() => toast.error('Something went wrong'))
       .finally(() => setIsLoading(false));
   }, [page, searchText]);
 
@@ -46,13 +52,14 @@ const App = () => {
     <>
       <AppWrap>
         <Searchbar createSearchText={createSearchText} resetPage={resetPage} />
-        {error && <h1>Please try again</h1>}
+        {/* {error && <h1>Please try again</h1>} */}
         {images && <ImageGallery images={images} />}
         {images.length > 0 && !isLoading && totalHits > 12 && (
           <LoadMoreBtn onClick={incrementPage} />
         )}
         {isLoading && <Loader widthLoader={'200'} heightLoader={'200'} />}
       </AppWrap>
+      <Toaster position="top-right" reverseOrder={false} />
     </>
   );
 };
